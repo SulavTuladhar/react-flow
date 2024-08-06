@@ -9,6 +9,9 @@ function QuestionComponent({ data, id }) {
   const { setNodes } = useReactFlow();
 
   const closeModal = () => setIsModalOpen(false);
+
+  const validData = useMemo(() => Object.keys(data).length === 0, [data]);
+
   const previousData = useMemo(() => {
     return {
       answers: data?.answers,
@@ -36,8 +39,13 @@ function QuestionComponent({ data, id }) {
       >
         <QuestionModalComponent data={previousData} onSave={onSave} />
       </ModalComponent>
-      <CardWrapper background="bg-yellow-500" title="Question" id={id}>
-        {data !== undefined && (
+      <CardWrapper
+        background="bg-yellow-500"
+        title="Question"
+        id={id}
+        noDataDescription={validData ? "Double click to open modal" : ""}
+      >
+        {data && (
           <div className="py-4 flex flex-col gap-3 text-sm">
             <p>{data?.question}</p>
             <div className="flex flex-col gap-2 text-center">

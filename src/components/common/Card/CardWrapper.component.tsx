@@ -7,11 +7,13 @@ function CardWrapper({
   children,
   background,
   id,
+  noDataDescription = "",
 }: {
   title: string;
   children: React.ReactNode;
   background: string;
   id?: string;
+  noDataDescription?: string;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const { setNodes } = useReactFlow();
@@ -40,6 +42,12 @@ function CardWrapper({
           <AiOutlineMore className="w-5 h-5" />
         </div>
       </div>
+
+      {noDataDescription.length ? (
+        <p className="text-center text-gray-500 py-4 mb-[-2rem]">
+          {noDataDescription}
+        </p>
+      ) : null}
       <div className="px-4 bg-white w-[350px] rounded-br-md rounded-bl-md ">
         {children}
       </div>

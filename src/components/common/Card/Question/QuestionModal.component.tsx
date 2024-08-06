@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { AiFillDelete } from "react-icons/ai";
 import { uid } from "uid";
 
@@ -32,8 +32,8 @@ function QuestionModalComponent({
   };
   const removeForm = (e, id: number) => {
     e.preventDefault();
-    ansVariants.find((variant) => variant.id == id);
-    if (ansVariants.value.length >= 1) {
+    const ansVariant = ansVariants.find((variant) => variant.id == id);
+    if (ansVariant.value.length >= 1) {
       setAnsVariants((prevForms) =>
         prevForms.filter((form: any) => form.id !== id)
       );
@@ -65,7 +65,7 @@ function QuestionModalComponent({
         </textarea>
         <hr />
         <div className="flex items-center justify-between">
-          <label>Answer Variant</label>
+          <label htmlFor="#noHtmlFor">Answer Variant</label>
           <button
             onClick={(e) => addForm(e)}
             className="border-2 border-green-400 bg-green-400 py-1 px-4 rounded-md text-white"

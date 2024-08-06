@@ -54,7 +54,6 @@ export default function CustomEdge({
             fontSize: 12,
             pointerEvents: "all",
           }}
-          //   className="nodrag nopan"
         >
           <button
             className="border-2 border-red-500 rounded-full flex items-center justify-center h-5 w-5 pb-[1px] text-red-500 hover:bg-red-500 hover:text-white"

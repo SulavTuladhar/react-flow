@@ -19,15 +19,11 @@ import {
 import "@xyflow/react/dist/style.css";
 import React, { DragEvent, useCallback, useRef, useState } from "react";
 import { uid } from "uid";
-import {
-  initialEdges,
-  initialNodes,
-} from "../constraints/reactFlow.constraints";
 import MessageCardComponent from "./common/Card/Message/MessageCard.component";
+import QuestionComponent from "./common/Card/Question/Question.component";
 import MenuComponent from "./common/Menu.component";
 import CustomEdge from "./CustomEdge";
 import DndPanelComponent from "./panel/DndPanel.component";
-import QuestionComponent from "./common/Card/Question/Question.component";
 
 const nodeTypes = {
   message: MessageCardComponent,
@@ -39,6 +35,9 @@ const edgeTypes = {
   customEdge: CustomEdge,
 } as EdgeTypes;
 
+const initialNodes = JSON.parse(localStorage.getItem("nodes") as any) || [];
+const initialEdges = JSON.parse(localStorage.getItem("edges") as any) || [];
+
 function ReactFlowContainerComponent() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, OnEdgesChange] = useEdgesState(initialEdges);
@@ -48,6 +47,11 @@ function ReactFlowContainerComponent() {
   const { screenToFlowPosition } = useReactFlow();
   const reactFlowWrapper = useRef(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const saveFile = () => {
+    localStorage.setItem("edges", JSON.stringify(edges));
+    localStorage.setItem("nodes", JSON.stringify(nodes));
+  };
 
   const onConnect: OnConnect = useCallback(
     (connection: Connection) => {
@@ -137,7 +141,7 @@ function ReactFlowContainerComponent() {
             x: event.clientX,
             y: event.clientY,
           }),
-          data: { label: `Node ${id}` },
+          data: {},
           origin: [0.5, 0.0],
           type: "menu",
         };
@@ -165,7 +169,7 @@ function ReactFlowContainerComponent() {
   return (
     <div className="flex h-full">
       <div>
-        <DndPanelComponent />
+        <DndPanelComponent saveFile={saveFile} />
       </div>
       <div
         className="h-full w-[100vw] border-2"

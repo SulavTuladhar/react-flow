@@ -1,7 +1,11 @@
 import React, { useMemo } from "react";
 import { useDragImage } from "../../hooks/dragComponent.hook";
 import MessageSkeletonComponent from "../common/Skeleton/MessageSkeleton.component";
-
+import QuestionSkeleton from "../common/Skeleton/QuestionSkeleton.component";
+const skeletonComponent = {
+  message: <MessageSkeletonComponent />,
+  question: <QuestionSkeleton />,
+};
 function CardWithIconComponent({
   title,
   className,
@@ -17,13 +21,12 @@ function CardWithIconComponent({
   icon: any;
   func: (e, type, data) => void;
 }) {
+  const skeleton = useMemo(() => skeletonComponent[type], [type]);
   const dragImageRef = useDragImage(
-    <div className="w-[200px] bg-red-200">
-      <MessageSkeletonComponent />
-    </div>
+    <div className="w-[180px]">{skeleton}</div>
   );
   const onDragStart = (e) => {
-    func(e, type, { hello: "hello" });
+    func(e, type, {});
     if (dragImageRef.current) {
       e.dataTransfer.setDragImage(dragImageRef.current, 50, 50);
     }
