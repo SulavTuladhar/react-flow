@@ -1,6 +1,6 @@
 import React from "react";
 import { useDragImage } from "../../hooks/dragComponent.hook";
-import { Shapes } from "../../constants/shapes.contrants";
+import { Shapes } from "../../constraints/shapes.contrants";
 
 function AddShapesComponent({
   func,

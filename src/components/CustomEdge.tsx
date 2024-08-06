@@ -36,7 +36,16 @@ export default function CustomEdge({
 
   return (
     <>
-      <BaseEdge path={edgePath} markerEnd={markerEnd} style={style} />
+      <BaseEdge
+        path={edgePath}
+        markerEnd={markerEnd}
+        style={{
+          ...style,
+          strokeDasharray: "5, 5",
+          stroke: "#A3A3A3",
+          strokeWidth: 2,
+        }}
+      />
       <EdgeLabelRenderer>
         <div
           style={{

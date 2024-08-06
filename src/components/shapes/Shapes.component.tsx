@@ -1,5 +1,5 @@
 import React from "react";
-import { Shapes } from "../../constants/shapes.contrants";
+import { Shapes } from "../../constraints/shapes.contrants";
 
 function ShapesComponent(data: any) {
   const sanitizedData = JSON.parse(JSON.stringify(data));

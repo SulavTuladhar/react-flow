@@ -1,14 +1,14 @@
 /* eslint-disable no-unused-vars */
 import {
   Background,
-  BackgroundVariant,
+  BezierEdge,
   Connection,
   Controls,
   EdgeTypes,
   MarkerType,
+  MiniMap,
   NodeTypes,
   OnConnect,
-  Panel,
   ReactFlow,
   ReactFlowProvider,
   addEdge,
@@ -17,21 +17,22 @@ import {
   useReactFlow,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import React, { DragEvent, useCallback } from "react";
+import React, { DragEvent, useCallback, useRef, useState } from "react";
 import { uid } from "uid";
-import { initialEdges, initialNodes } from "../constants/reactFlow.constrants";
+import {
+  initialEdges,
+  initialNodes,
+} from "../constraints/reactFlow.constraints";
+import MessageCardComponent from "./common/Card/Message/MessageCard.component";
+import MenuComponent from "./common/Menu.component";
 import CustomEdge from "./CustomEdge";
-import DndPanelComponent from "./DndPanel.component";
-import PaymentCountryComponent from "./PaymentCountry.component";
-import PaymentInitComponent from "./PaymentInit.component";
-import PaymentProviderComponent from "./PaymentProvider.component";
-import ShapesComponent from "./shapes/Shapes.component";
+import DndPanelComponent from "./panel/DndPanel.component";
+import QuestionComponent from "./common/Card/Question/Question.component";
 
 const nodeTypes = {
-  paymentInit: PaymentInitComponent,
-  paymentCountry: PaymentCountryComponent,
-  paymentProvider: PaymentProviderComponent,
-  shape: ShapesComponent,
+  message: MessageCardComponent,
+  question: QuestionComponent,
+  menu: MenuComponent,
 } as NodeTypes;
 
 const edgeTypes = {
@@ -41,33 +42,44 @@ const edgeTypes = {
 function ReactFlowContainerComponent() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, OnEdgesChange] = useEdgesState(initialEdges);
+  const connectingNodeId = useRef(null);
+  const connectingNodeHandle = useRef(null);
+
   const { screenToFlowPosition } = useReactFlow();
+  const reactFlowWrapper = useRef(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const onConnect: OnConnect = useCallback((connection: Connection) => {
-    const edge = {
-      ...connection,
-      // animated: true,
-      id: `${uid(3)}`,
-      type: "customEdge",
-      markerEnd: {
-        type: MarkerType.ArrowClosed,
-      },
-    };
-    setEdges((prevEdges: any) => addEdge(edge, prevEdges));
-  }, []);
-
-  const isValidConnection = (connection): boolean => {
-    if (connection.target == "1") {
-      return false;
+  const onConnect: OnConnect = useCallback(
+    (connection: Connection) => {
+      connectingNodeId.current = null;
+      connectingNodeHandle.current = null;
+      const edge = {
+        ...connection,
+        // animated: true,
+        id: `${uid(3)}`,
+        type: "customEdge",
+        markerEnd: {
+          type: MarkerType.ArrowClosed,
+        },
+      };
+      setEdges((prevEdges: any) => addEdge(edge, prevEdges));
+    },
+    [setEdges]
+  );
+  const onPaneClick = (event, nodes) => {
+    const menuNode = nodes.find((node) => node.type === "menu");
+    if (menuNode && isMenuOpen) {
+      setNodes((prevNodes) => {
+        return prevNodes.filter((node) => node.id !== menuNode.id);
+      });
+    } else {
+      setIsMenuOpen(!isMenuOpen);
     }
-    return true;
   };
-
   const onDragOver = useCallback((event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = "move";
   }, []);
-
   const onDrop = useCallback(
     (event) => {
       event.preventDefault();
@@ -98,27 +110,87 @@ function ReactFlowContainerComponent() {
     },
     [screenToFlowPosition]
   );
+  const onConnectStart = useCallback(
+    (
+      _,
+      params: {
+        nodeId: string | null;
+        handleId: string | null;
+        handleType: "source" | "target" | null;
+      }
+    ) => {
+      connectingNodeId.current = params.nodeId as any;
+      connectingNodeHandle.current = params.handleId as any;
+    },
+    []
+  );
+  const onConnectEnd = useCallback(
+    (event) => {
+      if (!connectingNodeId.current) return;
+
+      const targetIsPane = event.target.classList.contains("react-flow__pane");
+      if (targetIsPane) {
+        const id = uid(3);
+        const newNode = {
+          id,
+          position: screenToFlowPosition({
+            x: event.clientX,
+            y: event.clientY,
+          }),
+          data: { label: `Node ${id}` },
+          origin: [0.5, 0.0],
+          type: "menu",
+        };
+
+        setNodes((nds) => nds.concat(newNode as any));
+        setEdges((eds) =>
+          eds.concat({
+            id,
+            source: connectingNodeId.current,
+            sourceHandle: connectingNodeHandle.current,
+            target: id,
+            type: "customEdge",
+            markerEnd: {
+              type: MarkerType.ArrowClosed,
+            },
+            variant: BezierEdge,
+          } as any)
+        );
+      }
+      setIsMenuOpen(false);
+    },
+    [screenToFlowPosition]
+  );
+
   return (
-    <div className="h-full w-[100vw] border-2">
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        fitView={true}
-        onEdgesChange={OnEdgesChange}
-        onNodesChange={onNodesChange}
-        onConnect={onConnect}
-        edgeTypes={edgeTypes}
-        nodeTypes={nodeTypes}
-        isValidConnection={isValidConnection}
-        onDragOver={onDragOver}
-        onDrop={onDrop}
+    <div className="flex h-full">
+      <div>
+        <DndPanelComponent />
+      </div>
+      <div
+        className="h-full w-[100vw] border-2"
+        ref={reactFlowWrapper}
+        onClick={(e) => onPaneClick(e, nodes)}
       >
-        <Background variant={BackgroundVariant.Cross} />
-        <Controls />
-        <Panel position="top-left" className="h-full w-[16rem]">
-          <DndPanelComponent />
-        </Panel>
-      </ReactFlow>
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          fitView={true}
+          onEdgesChange={OnEdgesChange}
+          onNodesChange={onNodesChange}
+          onConnect={onConnect}
+          edgeTypes={edgeTypes}
+          nodeTypes={nodeTypes}
+          onDragOver={onDragOver}
+          onDrop={onDrop}
+          onConnectEnd={onConnectEnd}
+          onConnectStart={onConnectStart}
+        >
+          <Background bgColor="#f9f7f3" />
+          <Controls />
+          <MiniMap />
+        </ReactFlow>
+      </div>
     </div>
   );
 }
