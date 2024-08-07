@@ -36,7 +36,16 @@ export default function CustomEdge({
 
   return (
     <>
-      <BaseEdge path={edgePath} markerEnd={markerEnd} style={style} />
+      <BaseEdge
+        path={edgePath}
+        markerEnd={markerEnd}
+        style={{
+          ...style,
+          strokeDasharray: "5, 5",
+          stroke: "#A3A3A3",
+          strokeWidth: 2,
+        }}
+      />
       <EdgeLabelRenderer>
         <div
           style={{
@@ -45,7 +54,6 @@ export default function CustomEdge({
             fontSize: 12,
             pointerEvents: "all",
           }}
-          //   className="nodrag nopan"
         >
           <button
             className="border-2 border-red-500 rounded-full flex items-center justify-center h-5 w-5 pb-[1px] text-red-500 hover:bg-red-500 hover:text-white"
