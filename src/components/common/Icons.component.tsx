@@ -21,7 +21,7 @@ export const ResizeIcon = () => {
       height="20"
       viewBox="0 0 24 24"
       strokeWidth="2"
-      stroke="#10b981"
+      stroke="#000"
       fill="none"
       strokeLinecap="round"
       strokeLinejoin="round"

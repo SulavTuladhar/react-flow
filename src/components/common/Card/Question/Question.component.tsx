@@ -68,7 +68,7 @@ function QuestionComponent({ data, id }) {
             </div>
           </div>
         )}
-        <Handle type="target" position={Position.Left} id="1324" />
+        <Handle type="target" position={Position.Left} />
       </CardWrapper>
     </div>
   );

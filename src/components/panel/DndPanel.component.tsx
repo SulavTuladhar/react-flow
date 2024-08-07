@@ -13,7 +13,7 @@ function DndPanelComponent({ saveFile }: { saveFile: () => void }) {
   };
 
   return (
-    <div className="relative bg-white h-full flex gap-2 flex-col py-2 border-[#eee] border-2 px-4 ">
+    <div className="relative bg-white !shadow-none h-full flex gap-2 flex-col py-2 border-[#eee] border-2 px-4 ">
       {DndConstraints.map((item, index) => (
         <CardWithIconComponent
           className={item.className}
@@ -25,7 +25,8 @@ function DndPanelComponent({ saveFile }: { saveFile: () => void }) {
           func={onDragStart}
         />
       ))}
-      <div className="flex gap-3 flex-wrap">
+      <p className="my-2 text-lg">Shapes</p>
+      <div className="grid grid-cols-2 gap-4">
         {ShapeTypes.map((item: string, index: number) => (
           <AddShapesComponent func={onDragStart} type={item} key={index} />
         ))}

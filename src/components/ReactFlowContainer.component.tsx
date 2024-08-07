@@ -32,6 +32,7 @@ import MenuComponent from "./common/Menu.component";
 import CustomEdge from "./CustomEdge";
 import DndPanelComponent from "./panel/DndPanel.component";
 import ShapesComponent from "./shapes/Shapes.component";
+import { MiniMapNodeColor } from "../constraints/minimap.constraints";
 
 const nodeTypes = {
   message: MessageCardComponent,
@@ -51,11 +52,11 @@ function ReactFlowContainerComponent() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, OnEdgesChange] = useEdgesState(initialEdges);
   const [isFileSaved, setIsFileSaved] = useState<boolean>(false);
+  const nodeClassName = (node) => node.type;
 
   useEffect(() => {
     setIsFileSaved(false);
   }, [nodes, edges]);
-
   useEffect(() => {
     const handleBeforeUnload = (event) => {
       if (!isFileSaved) {
@@ -123,7 +124,6 @@ function ReactFlowContainerComponent() {
   const onDrop = useCallback(
     (event) => {
       event.preventDefault();
-
       const type = event.dataTransfer.getData("type");
       const data = event.dataTransfer.getData("data");
       if (
@@ -134,7 +134,6 @@ function ReactFlowContainerComponent() {
       ) {
         return;
       }
-
       const position = screenToFlowPosition({
         x: event.clientX,
         y: event.clientY,
@@ -167,7 +166,6 @@ function ReactFlowContainerComponent() {
   const onConnectEnd = useCallback(
     (event) => {
       if (!connectingNodeId.current) return;
-
       const targetIsPane = event.target.classList.contains("react-flow__pane");
       if (targetIsPane) {
         const id = uid(3);
@@ -228,7 +226,16 @@ function ReactFlowContainerComponent() {
         >
           <Background bgColor="#f9f7f3" />
           <Controls />
-          <MiniMap />
+          <MiniMap
+            zoomable
+            pannable
+            nodeStrokeColor={(n) => {
+              return MiniMapNodeColor(n);
+            }}
+            nodeColor={(n) => {
+              return MiniMapNodeColor(n);
+            }}
+          />
         </ReactFlow>
       </div>
     </div>
