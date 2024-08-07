@@ -26,10 +26,10 @@ function ShapesComponent({ data, id }: { data: any; id: string }) {
 
   return (
     <div
-      className={`relative border rounded-md border-${ShapeBorderColor[shapeType]} flex items-center  justify-center`}
+      className={`relative border rounded-md border-${ShapeBorderColor[shapeType]} flex items-center justify-center`}
       style={{
-        height: `${currentNode?.height}px`,
-        width: `${currentNode?.width}px`,
+        height: `${currentNode?.height ?? "100"}px`,
+        width: `${currentNode?.width ?? "100"}px`,
       }}
     >
       <button
