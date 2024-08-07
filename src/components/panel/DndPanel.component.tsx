@@ -13,7 +13,7 @@ function DndPanelComponent({ saveFile }: { saveFile: () => void }) {
   };
 
   return (
-    <div className="relative bg-white !shadow-none h-full flex gap-2 flex-col py-2 border-[#eee] border-2 px-4 ">
+    <div className="relative bg-white shadow-none h-full flex gap-2 flex-col py-2 border-[#eee] border-2 px-4 ">
       {DndConstraints.map((item, index) => (
         <CardWithIconComponent
           className={item.className}
