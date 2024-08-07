@@ -9,7 +9,7 @@ function AddShapesComponent({
   func: (e: React.DragEvent, type: string, data: any) => void;
   type: string;
 }) {
-  const dragImageRef = useDragImage(Shapes[type]);
+  const dragImageRef = useDragImage(<>{Shapes[type]}</>);
   return (
     <div
       className={`w-[100px] cursor-grab`}

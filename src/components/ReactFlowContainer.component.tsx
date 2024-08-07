@@ -31,11 +31,13 @@ import MenuComponent from "./common/Menu.component";
 import CustomEdge from "./CustomEdge";
 import DndPanelComponent from "./panel/DndPanel.component";
 import { showSuccess } from "../utils/notify";
+import ShapesComponent from "./shapes/Shapes.component";
 
 const nodeTypes = {
   message: MessageCardComponent,
   question: QuestionComponent,
   menu: MenuComponent,
+  shape: ShapesComponent,
 } as NodeTypes;
 
 const edgeTypes = {
