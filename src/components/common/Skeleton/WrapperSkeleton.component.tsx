@@ -13,7 +13,7 @@ function WrapperSkeletonComponent({
   id?: string;
 }) {
   return (
-    <div className="bg-white shadow-[rgba(0,_0,_0,_0.25)_0px_25px_50px_-12px] hover:shadow-[0_3px_10px_rgb(0,0,0,0.2)] duration-200 rounded-br-md rounded-bl-md ">
+    <div className="bg-white shadow-[rgba(0,_0,_0,_0.25)_0px_25px_50px_-12px] hover:shadow-[0_3px_10px_rgb(0,0,0,0.2)] duration-200 rounded-br-md rounded-bl-md">
       <div
         className={`flex items-center justify-between ${background} w-[300px] text-white px-4 rounded-tr-md rounded-tl-md py-3 text-sm`}
       >

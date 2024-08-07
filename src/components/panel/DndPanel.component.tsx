@@ -2,6 +2,8 @@ import React from "react";
 import { AiFillSave } from "react-icons/ai";
 import { DndConstraints } from "../../constraints/panel.constraints";
 import CardWithIconComponent from "./CardWithIcon.component";
+import { ShapeTypes } from "../../constraints/shapes.contrants";
+import AddShapesComponent from "../shapes/AddShapes.component";
 
 function DndPanelComponent({ saveFile }: { saveFile: () => void }) {
   const onDragStart = (event, nodeType, data) => {
@@ -9,8 +11,9 @@ function DndPanelComponent({ saveFile }: { saveFile: () => void }) {
     event.dataTransfer.setData("data", JSON.stringify(data));
     event.dataTransfer.effectAllowed = "move";
   };
+
   return (
-    <div className="relative bg-white h-full flex gap-2 flex-col py-2 border-[#eee] border-2 px-4">
+    <div className="relative bg-white !shadow-none h-full flex gap-2 flex-col py-2 border-[#eee] border-2 px-4 ">
       {DndConstraints.map((item, index) => (
         <CardWithIconComponent
           className={item.className}
@@ -22,6 +25,12 @@ function DndPanelComponent({ saveFile }: { saveFile: () => void }) {
           func={onDragStart}
         />
       ))}
+      <p className="my-2 text-lg">Shapes</p>
+      <div className="grid grid-cols-2 gap-4">
+        {ShapeTypes.map((item: string, index: number) => (
+          <AddShapesComponent func={onDragStart} type={item} key={index} />
+        ))}
+      </div>
       <button
         className="bg-green-500 rounded-full text-white absolute inset-x-0 bottom-2 left-2 w-fit p-3 cursor-pointer"
         onClick={() => saveFile()}

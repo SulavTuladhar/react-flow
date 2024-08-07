@@ -66,7 +66,6 @@ function MessageCardComponent({ data, id }: { data: any; id?: string }) {
       setImagesSrc((prevImgs) => prevImgs.filter((img: any) => img.id !== id));
     }
   };
-
   const handleFileChange = (e, id) => {
     const file = e.target.files[0];
     if (file) {
@@ -96,6 +95,7 @@ function MessageCardComponent({ data, id }: { data: any; id?: string }) {
       return prevNodes.map((node) => (node.id === id ? updatedNode : node));
     });
   };
+
   return (
     <div className=" rounded-br-md rounded-bl-md">
       <CardWrapper title="Send a message" background="bg-red-500" id={id}>

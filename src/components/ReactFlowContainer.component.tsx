@@ -25,16 +25,20 @@ import React, {
   useState,
 } from "react";
 import { uid } from "uid";
+import { showSuccess } from "../utils/notify";
 import MessageCardComponent from "./common/Card/Message/MessageCard.component";
 import QuestionComponent from "./common/Card/Question/Question.component";
 import MenuComponent from "./common/Menu.component";
 import CustomEdge from "./CustomEdge";
 import DndPanelComponent from "./panel/DndPanel.component";
+import ShapesComponent from "./shapes/Shapes.component";
+import { MiniMapNodeColor } from "../constraints/minimap.constraints";
 
 const nodeTypes = {
   message: MessageCardComponent,
   question: QuestionComponent,
   menu: MenuComponent,
+  shape: ShapesComponent,
 } as NodeTypes;
 
 const edgeTypes = {
@@ -48,11 +52,11 @@ function ReactFlowContainerComponent() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, OnEdgesChange] = useEdgesState(initialEdges);
   const [isFileSaved, setIsFileSaved] = useState<boolean>(false);
+  const nodeClassName = (node) => node.type;
 
   useEffect(() => {
     setIsFileSaved(false);
   }, [nodes, edges]);
-
   useEffect(() => {
     const handleBeforeUnload = (event) => {
       if (!isFileSaved) {
@@ -60,13 +64,11 @@ function ReactFlowContainerComponent() {
         event.returnValue = "";
       }
     };
-    console.log("isFileSaved >> ", isFileSaved);
     if (!isFileSaved) {
       window.addEventListener("beforeunload", handleBeforeUnload);
     } else {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     }
-
     return () => {
       if (!isFileSaved) {
         window.removeEventListener("beforeunload", handleBeforeUnload);
@@ -85,6 +87,7 @@ function ReactFlowContainerComponent() {
     localStorage.setItem("edges", JSON.stringify(edges));
     localStorage.setItem("nodes", JSON.stringify(nodes));
     setIsFileSaved(true);
+    showSuccess("Saved");
   };
 
   const onConnect: OnConnect = useCallback(
@@ -121,7 +124,6 @@ function ReactFlowContainerComponent() {
   const onDrop = useCallback(
     (event) => {
       event.preventDefault();
-
       const type = event.dataTransfer.getData("type");
       const data = event.dataTransfer.getData("data");
       if (
@@ -132,7 +134,6 @@ function ReactFlowContainerComponent() {
       ) {
         return;
       }
-
       const position = screenToFlowPosition({
         x: event.clientX,
         y: event.clientY,
@@ -165,7 +166,6 @@ function ReactFlowContainerComponent() {
   const onConnectEnd = useCallback(
     (event) => {
       if (!connectingNodeId.current) return;
-
       const targetIsPane = event.target.classList.contains("react-flow__pane");
       if (targetIsPane) {
         const id = uid(3);
@@ -226,7 +226,16 @@ function ReactFlowContainerComponent() {
         >
           <Background bgColor="#f9f7f3" />
           <Controls />
-          <MiniMap />
+          <MiniMap
+            zoomable
+            pannable
+            nodeStrokeColor={(n) => {
+              return MiniMapNodeColor(n);
+            }}
+            nodeColor={(n) => {
+              return MiniMapNodeColor(n);
+            }}
+          />
         </ReactFlow>
       </div>
     </div>

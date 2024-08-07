@@ -1,11 +1,13 @@
 import React from "react";
 
 function TriangleComponent() {
+  const style = {
+    clipPath: "polygon(50% 0%, 100% 100%, 0% 100%)",
+  };
   return (
-    <div className="w-[100px] h-full">
-      <div className="w-0 h-full border-b-[86.6px] border-l-[50px] border-l-transparent border-r-[50px] border-r-transparent"></div>
+    <div className="relative h-full w-full">
+      <div className="absolute inset-0 bg-gray-200" style={style}></div>
     </div>
   );
 }
-
 export default TriangleComponent;
