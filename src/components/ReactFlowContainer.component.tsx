@@ -30,6 +30,7 @@ import QuestionComponent from "./common/Card/Question/Question.component";
 import MenuComponent from "./common/Menu.component";
 import CustomEdge from "./CustomEdge";
 import DndPanelComponent from "./panel/DndPanel.component";
+import { showSuccess } from "../utils/notify";
 
 const nodeTypes = {
   message: MessageCardComponent,
@@ -60,13 +61,11 @@ function ReactFlowContainerComponent() {
         event.returnValue = "";
       }
     };
-    console.log("isFileSaved >> ", isFileSaved);
     if (!isFileSaved) {
       window.addEventListener("beforeunload", handleBeforeUnload);
     } else {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     }
-
     return () => {
       if (!isFileSaved) {
         window.removeEventListener("beforeunload", handleBeforeUnload);
@@ -85,6 +84,7 @@ function ReactFlowContainerComponent() {
     localStorage.setItem("edges", JSON.stringify(edges));
     localStorage.setItem("nodes", JSON.stringify(nodes));
     setIsFileSaved(true);
+    showSuccess("Saved");
   };
 
   const onConnect: OnConnect = useCallback(
