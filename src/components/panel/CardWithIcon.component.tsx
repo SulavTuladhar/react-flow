@@ -34,7 +34,7 @@ function CardWithIconComponent({
   const CardIcon = useMemo(() => icon, [icon]);
   return (
     <div
-      className={`p-4 rounded-lg shadow-lg flex items-center ${className}`}
+      className={`p-4 rounded-lg flex items-center ${className}`}
       onDragStart={(e) => onDragStart(e)}
       draggable
     >

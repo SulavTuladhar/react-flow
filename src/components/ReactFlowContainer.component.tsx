@@ -25,12 +25,12 @@ import React, {
   useState,
 } from "react";
 import { uid } from "uid";
+import { showSuccess } from "../utils/notify";
 import MessageCardComponent from "./common/Card/Message/MessageCard.component";
 import QuestionComponent from "./common/Card/Question/Question.component";
 import MenuComponent from "./common/Menu.component";
 import CustomEdge from "./CustomEdge";
 import DndPanelComponent from "./panel/DndPanel.component";
-import { showSuccess } from "../utils/notify";
 import ShapesComponent from "./shapes/Shapes.component";
 
 const nodeTypes = {

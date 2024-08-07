@@ -1,6 +1,6 @@
 import React from "react";
-import { useDragImage } from "../../hooks/dragComponent.hook";
 import { Shapes } from "../../constraints/shapes.contrants";
+import { useDragImage } from "../../hooks/dragComponent.hook";
 
 function AddShapesComponent({
   func,
@@ -9,10 +9,12 @@ function AddShapesComponent({
   func: (e: React.DragEvent, type: string, data: any) => void;
   type: string;
 }) {
-  const dragImageRef = useDragImage(<>{Shapes[type]}</>);
+  const dragImageRef = useDragImage(
+    <div className="h-[100px] w-[100px] shadow-none">{Shapes[type]}</div>
+  );
   return (
     <div
-      className={`w-[100px] cursor-grab`}
+      className={`w-[100px] cursor-grab h-[100px] w-[100px]`}
       draggable={!!func}
       onDragStart={(e) => {
         func(e, "shape", { shape: type });

@@ -11,6 +11,7 @@ function DndPanelComponent({ saveFile }: { saveFile: () => void }) {
     event.dataTransfer.setData("data", JSON.stringify(data));
     event.dataTransfer.effectAllowed = "move";
   };
+
   return (
     <div className="relative bg-white h-full flex gap-2 flex-col py-2 border-[#eee] border-2 px-4 ">
       {DndConstraints.map((item, index) => (
@@ -24,7 +25,7 @@ function DndPanelComponent({ saveFile }: { saveFile: () => void }) {
           func={onDragStart}
         />
       ))}
-      <div className="flex gap-3 flex-wrap ">
+      <div className="flex gap-3 flex-wrap">
         {ShapeTypes.map((item: string, index: number) => (
           <AddShapesComponent func={onDragStart} type={item} key={index} />
         ))}
