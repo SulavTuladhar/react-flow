@@ -17,7 +17,13 @@ import {
   useReactFlow,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import React, { DragEvent, useCallback, useRef, useState } from "react";
+import React, {
+  DragEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { uid } from "uid";
 import MessageCardComponent from "./common/Card/Message/MessageCard.component";
 import QuestionComponent from "./common/Card/Question/Question.component";
@@ -41,6 +47,33 @@ const initialEdges = JSON.parse(localStorage.getItem("edges") as any) || [];
 function ReactFlowContainerComponent() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, OnEdgesChange] = useEdgesState(initialEdges);
+  const [isFileSaved, setIsFileSaved] = useState<boolean>(false);
+
+  useEffect(() => {
+    setIsFileSaved(false);
+  }, [nodes, edges]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      if (!isFileSaved) {
+        event.preventDefault();
+        event.returnValue = "";
+      }
+    };
+    console.log("isFileSaved >> ", isFileSaved);
+    if (!isFileSaved) {
+      window.addEventListener("beforeunload", handleBeforeUnload);
+    } else {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    }
+
+    return () => {
+      if (!isFileSaved) {
+        window.removeEventListener("beforeunload", handleBeforeUnload);
+      }
+    };
+  }, [isFileSaved]);
+
   const connectingNodeId = useRef(null);
   const connectingNodeHandle = useRef(null);
 
@@ -51,6 +84,7 @@ function ReactFlowContainerComponent() {
   const saveFile = () => {
     localStorage.setItem("edges", JSON.stringify(edges));
     localStorage.setItem("nodes", JSON.stringify(nodes));
+    setIsFileSaved(true);
   };
 
   const onConnect: OnConnect = useCallback(
